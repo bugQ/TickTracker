@@ -253,7 +253,7 @@ public sealed unsafe class ImageNode : IDisposable
         imageNode->AtkResNode.NodeFlags = NodeFlags;
         imageNode->AtkResNode.DrawFlags = DrawFlags;
         imageNode->WrapMode = 1;
-        imageNode->Flags = 0;
+        imageNode->Flags = (ImageNodeFlags)0;
         imageNode->AtkResNode.SetScale(1, 1);
         imageNode->AtkResNode.ToggleVisibility(enable: true);
 

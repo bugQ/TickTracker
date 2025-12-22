@@ -51,7 +51,7 @@ public sealed class TickTracker : IDalamudPlugin
     private FrozenSet<uint> disabledHealthRegenSet = [];
 
     private readonly FrozenSet<string> meleeAndRangedAbbreviations = Utilities.CreateFrozenSet(
-        "PGL", "LNC", "ARC", "MNK", "DRG", "BRD", "ROG", "NIN", "MCH", "SAM", "DNC", "RPR");
+        "PGL", "LNC", "ARC", "MNK", "DRG", "BRD", "ROG", "NIN", "MCH", "SAM", "DNC", "RPR", "VPR");
     private readonly FrozenSet<string> discipleOfTheLandAbbreviations = Utilities.CreateFrozenSet("MIN", "BTN", "FSH");
     private FrozenSet<uint> meleeAndRangedDPS = [];
     private FrozenSet<uint> discipleOfTheLand = [];
@@ -73,6 +73,7 @@ public sealed class TickTracker : IDalamudPlugin
     private readonly IPluginLog log;
     private readonly IGameConfig gameConfig;
     private readonly IAddonLifecycle addonLifecycle;
+    private readonly IObjectTable objectTable;
 
     private ConfigWindow ConfigWindow { get; set; } = null!;
     private DebugWindow DebugWindow { get; set; } = null!;
@@ -117,6 +118,7 @@ public sealed class TickTracker : IDalamudPlugin
         IPluginLog _pluginLog,
         IGameConfig _gameConfig,
         IAddonLifecycle _addonLifecycle,
+        IObjectTable _objectTable,
         IGameInteropProvider _interopProvider)
     {
         pluginInterface = _pluginInterface;
@@ -127,6 +129,7 @@ public sealed class TickTracker : IDalamudPlugin
         condition = _condition;
         log = _pluginLog;
         gameConfig = _gameConfig;
+        objectTable = _objectTable;
         addonLifecycle = _addonLifecycle;
 
         _interopProvider.InitializeFromAttributes(this);
@@ -265,7 +268,7 @@ public sealed class TickTracker : IDalamudPlugin
         {
             return;
         }
-        if (clientState is not { LocalPlayer: { } player })
+        if (objectTable is not { LocalPlayer: { } player })
         {
             return;
         }
@@ -465,7 +468,7 @@ public sealed class TickTracker : IDalamudPlugin
         receiveActorUpdateHook!.Original(entityId, packetData, unkByte);
         try
         {
-            if (clientState is not { LocalPlayer: { } player })
+            if (objectTable is not { LocalPlayer: { } player })
             {
                 return;
             }
