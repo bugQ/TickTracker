@@ -22,7 +22,7 @@ public class Configuration : IPluginConfiguration
     public bool HideOnFullResource { get; set; } = false;
     public bool DisableCollisionInCombat { get; set; } = false;
     public bool CollisionDetection { get; set; } = false;
-    public bool HideMpBarOnMeleeRanged { get; set; } = false;
+    public bool HideMpBarOnPhysicalDPS { get; set; } = false;
 
     public Vector2 HPBarPosition { get; set; } = new(600, 500);
     public Vector2 HPBarSize { get; set; } = new(180, 50);

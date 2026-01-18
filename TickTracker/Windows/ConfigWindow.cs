@@ -115,7 +115,7 @@ public class ConfigWindow : Window
         ImGuiComponents.HelpMarker("This will make the frame around the game's native MP Bar to fill up to represent the tick progress.");
         ImGui.EndDisabled();
         ImGui.BeginDisabled(disabled);
-        EditConfigProperty("Hide MP bar on melee and ranged DPS", config, c => c.HideMpBarOnMeleeRanged, (c, value) => c.HideMpBarOnMeleeRanged = value, checkbox: true);
+        EditConfigProperty("Hide MP bar on Physical DPS", config, c => c.HideMpBarOnPhysicalDPS, (c, value) => c.HideMpBarOnPhysicalDPS = value, checkbox: true);
         ImGui.EndDisabled();
         ImGui.Spacing();
 

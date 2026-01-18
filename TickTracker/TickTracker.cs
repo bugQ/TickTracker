@@ -50,10 +50,10 @@ public sealed class TickTracker : IDalamudPlugin
     /// </summary>
     private FrozenSet<uint> disabledHealthRegenSet = [];
 
-    private readonly FrozenSet<string> meleeAndRangedAbbreviations = Utilities.CreateFrozenSet(
+    private readonly FrozenSet<string> physicalDPSAbbreviations = Utilities.CreateFrozenSet(
         "PGL", "LNC", "ARC", "MNK", "DRG", "BRD", "ROG", "NIN", "MCH", "SAM", "DNC", "RPR", "VPR");
     private readonly FrozenSet<string> discipleOfTheLandAbbreviations = Utilities.CreateFrozenSet("MIN", "BTN", "FSH");
-    private FrozenSet<uint> meleeAndRangedDPS = [];
+    private FrozenSet<uint> physicalDPS = [];
     private FrozenSet<uint> discipleOfTheLand = [];
 
     // Function that triggers when client receives a network packet with an update for nearby actors
@@ -387,7 +387,7 @@ public sealed class TickTracker : IDalamudPlugin
         foreach (var row in jobSheet)
         {
             var name = row.Abbreviation.GetText();
-            if (meleeAndRangedAbbreviations.Contains(name))
+            if (physicalDPSAbbreviations.Contains(name))
             {
                 bag1.Add(row.RowId);
                 continue;
@@ -397,7 +397,7 @@ public sealed class TickTracker : IDalamudPlugin
                 bag2.Add(row.RowId);
             }
         }
-        meleeAndRangedDPS = bag1.ToFrozenSet();
+        physicalDPS = bag1.ToFrozenSet();
         discipleOfTheLand = bag2.ToFrozenSet();
         var bannedStatus = Utilities.CreateFrozenSet<uint>(135, 307, 751, 1419, 1465, 1730, 2326);
         var filteredSheet = statusSheet.Where(s => !bannedStatus.Contains(s.RowId));
@@ -492,7 +492,7 @@ public sealed class TickTracker : IDalamudPlugin
     private unsafe void UpdateBarState(IPlayerCharacter player)
     {
         var jobId = player.ClassJob.RowId;
-        var althideForMeleeRangedDPS = meleeAndRangedDPS.Contains(jobId);
+        var althideForPhysicalDPS = physicalDPS.Contains(jobId);
         var isDiscipleOfTheLand = discipleOfTheLand.Contains(jobId);
         var Enemy = player.TargetObject?.ObjectKind == Dalamud.Game.ClientState.Objects.Enums.ObjectKind.BattleNpc;
         var inCombat = condition[ConditionFlag.InCombat];
@@ -500,7 +500,7 @@ public sealed class TickTracker : IDalamudPlugin
         var hideForGPBar = isDiscipleOfTheLand && config.GPVisible;
 
         var shouldShowHPBar = ShowBar(inCombat, player.CurrentHp == player.MaxHp, Enemy) && !inDuelingArea;
-        var shouldShowMPBar = ShowBar(inCombat, player.CurrentMp == player.MaxMp, Enemy) && !inDuelingArea && !althideForMeleeRangedDPS;
+        var shouldShowMPBar = ShowBar(inCombat, player.CurrentMp == player.MaxMp, Enemy) && !inDuelingArea && !althideForPhysicalDPS;
         var shouldShowGPBar = isDiscipleOfTheLand && (!config.HideOnFullResource || player.CurrentGp != player.MaxGp) && !inDuelingArea;
 
         HPBarWindow.IsOpen = !config.LockBar || (shouldShowHPBar && config.HPVisible);
