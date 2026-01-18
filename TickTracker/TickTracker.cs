@@ -492,7 +492,7 @@ public sealed class TickTracker : IDalamudPlugin
     private unsafe void UpdateBarState(IPlayerCharacter player)
     {
         var jobId = player.ClassJob.RowId;
-        var althideForPhysicalDPS = physicalDPS.Contains(jobId);
+        var althideForPhysicalDPS = config.HideMpBarOnPhysicalDPS && physicalDPS.Contains(jobId);
         var isDiscipleOfTheLand = discipleOfTheLand.Contains(jobId);
         var Enemy = player.TargetObject?.ObjectKind == Dalamud.Game.ClientState.Objects.Enums.ObjectKind.BattleNpc;
         var inCombat = condition[ConditionFlag.InCombat];

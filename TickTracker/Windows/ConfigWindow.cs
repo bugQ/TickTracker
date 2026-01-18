@@ -107,6 +107,7 @@ public class ConfigWindow : Window
         }
         ImGui.Spacing();
         var disabled = !config.MPVisible;
+        var fullyDisabled = disabled & !config.MPNativeUiVisible;
 
         EditConfigProperty("Show MP Bar", config, c => c.MPVisible, (c, value) => c.MPVisible = value, checkbox: true);
         ImGui.BeginDisabled(nativeDisabled);
@@ -114,7 +115,7 @@ public class ConfigWindow : Window
         ImGui.SameLine();
         ImGuiComponents.HelpMarker("This will make the frame around the game's native MP Bar to fill up to represent the tick progress.");
         ImGui.EndDisabled();
-        ImGui.BeginDisabled(disabled);
+        ImGui.BeginDisabled(fullyDisabled);
         EditConfigProperty("Hide MP bar on Physical DPS", config, c => c.HideMpBarOnPhysicalDPS, (c, value) => c.HideMpBarOnPhysicalDPS = value, checkbox: true);
         ImGui.EndDisabled();
         ImGui.Spacing();
@@ -235,7 +236,7 @@ public class ConfigWindow : Window
     {
         if (disabled)
         {
-            ImGui.BeginDisabled();
+            ImGui.BeginDisabled(disabled);
         }
 
         EditConfigProperty("HP Bar Background Color", config, c => c.HPBarBackgroundColor, (c, value) => c.HPBarBackgroundColor = value, checkbox: false, button: false, colorEdit: true, flags);
